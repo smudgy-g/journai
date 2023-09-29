@@ -1,3 +1,4 @@
+import { analyse } from "@/utils/ai"
 import { getUserByClerkId } from "@/utils/auth"
 import { prisma } from "@/utils/db"
 import { revalidatePath } from "next/cache"
@@ -12,6 +13,13 @@ export const POST = async () => {
     }
   })
 
+  const analysis = await analyse(entry.content)
+  await prisma.analysis.create({
+    data: {
+      entryId: entry.id,
+      ...analysis
+    }
+  })
   // tell nextjs to check the cache again for the updated entries
   revalidatePath('/journal')
 
