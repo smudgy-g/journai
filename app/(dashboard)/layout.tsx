@@ -5,7 +5,7 @@ import React from 'react'
 const links = [
   { href: '/', label: 'Home'},
   { href: '/journal', label: 'Journal'},
-  // { href: '/', label: 'Home'},
+  { href: '/history', label: 'History'},
 ]
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -29,7 +29,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <UserButton />
           </div>
         </header>
-        <div className="h-[calc(100vh-60px)]">{children}</div>
+        <div className="h-full">{children}</div>
       </div>
     </div>
   )

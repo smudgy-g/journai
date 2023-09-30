@@ -1,14 +1,17 @@
 'use client'
 
-import { updateEntry } from "@/utils/api";
+import { deleteEntry, updateEntry } from "@/utils/api";
 import { useState } from "react"
 import { Autosave, useAutosave } from 'react-autosave';
 import Spinner from "./Spinner";
+import { AnalysisType, JournalEntryType } from "@/types";
+import { useRouter } from "next/navigation";
 
-const Editor = ({ entry }) => {
+const Editor = ({ entry }: { entry: JournalEntryType & { analysis: AnalysisType } }) => {
   const [value, setValue] = useState(entry.content)
   const [analysis, setAnalysis] = useState(entry.analysis)
   const [isSaving, setIsSaving] = useState(false)
+  const router = useRouter()
 
   const { mood, summary, colour, subject, negative } = analysis
   const analysisData = [
@@ -18,6 +21,11 @@ const Editor = ({ entry }) => {
     {name: 'Negative', value: negative ? 'true' : 'false'},
   ]
 
+  const handleDelete = async () => {
+    await deleteEntry(entry.id)
+    router.push('/journal')
+  }
+  
   useAutosave({
     data: value,
     onSave: async(_value: string) => {
@@ -56,6 +64,15 @@ const Editor = ({ entry }) => {
               <span>{data.value}</span>
             </li>
             ))}
+            <li className="py-4 px-8 flex items-center justify-between">
+              <button
+                onClick={handleDelete}
+                type="button"
+                className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+              >
+                Delete
+              </button>
+            </li>
         </ul>
       </div>
     </div> 
